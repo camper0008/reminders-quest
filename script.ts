@@ -48,7 +48,7 @@ class LevelRenderer {
     private pointListElement: HTMLDivElement;
     private points: PointElement[] = [];
     private pointQueue: TaskType[] = [];
-    private pointQueueIntervalId: number;
+    private pointQueueIntervalId: number | undefined;
 
     private static pointsForNextLevel(currentLevel: number): number {
         return currentLevel + 10;
@@ -134,6 +134,7 @@ class LevelRenderer {
             this.clear();
             this.fillEmptySpots();
             this.pointQueue.unshift(task);
+            this.emptyFeedingQueue();
         }
         this.replacePoint({ ref, state: "filled" }, firstFreeIndex);
     }
@@ -141,6 +142,24 @@ class LevelRenderer {
     public feed(task: TaskType) {
         const points = new Array(LevelRenderer.pointForTask(task)).fill(task);
         this.pointQueue.push(...points);
+        this.emptyFeedingQueue();
+    }
+
+    private emptyFeedingQueue() {
+        if (this.pointQueue.length === 0 || this.pointQueueIntervalId !== undefined) {
+            return;
+        }
+        const point = this.pointQueue.shift()!;
+        this.feedSingle(point);
+        this.pointQueueIntervalId = window.setInterval(() => {
+            const point = this.pointQueue.shift();
+            if (point) {
+                this.feedSingle(point);
+            } else {
+                window.clearInterval(this.pointQueueIntervalId);
+                this.pointQueueIntervalId = undefined;
+            }
+        }, 500)
     }
 
     constructor(levelElement: HTMLDivElement, initialCompletedTasks: TaskType[]) {
@@ -150,19 +169,10 @@ class LevelRenderer {
         this.pointListElement = levelElement.querySelector("#points")!;
         this.fillEmptySpots();
 
-        this.pointQueueIntervalId = window.setInterval(() => {
-            const point = this.pointQueue.pop();
-            if (point) {
-                this.feedSingle(point);
-            }
-        }, 500)
-
         while (true) {
             const point = points.shift();
             if (point) {
-                window.requestAnimationFrame(() => {
-                    this.feed(point);
-                })
+                this.feed(point);
             } else {
                 break;
             }
