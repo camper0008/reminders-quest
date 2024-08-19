@@ -42,7 +42,7 @@ interface PointElement {
     ref: HTMLDivElement;
 }
 
-class LevelRenderer {
+class Level {
     private level: number = 0;
     private levelCounterElement: HTMLElement;
     private pointListElement: HTMLDivElement;
@@ -90,8 +90,8 @@ class LevelRenderer {
 
     private fillEmptySpots() {
         const count = this.points.filter(v => v.state !== "old").length;
-        for (let i = 0; i < LevelRenderer.pointsForNextLevel(this.level) - count; i++) {
-            const ref = LevelRenderer.createPointElement("unfilled");
+        for (let i = 0; i < Level.pointsForNextLevel(this.level) - count; i++) {
+            const ref = Level.createPointElement("unfilled");
             this.points.push({
                 state: "unfilled",
                 ref
@@ -126,7 +126,7 @@ class LevelRenderer {
     }
 
     private feedSingle(task: TaskType): void {
-        const ref = LevelRenderer.createPointElement(task);
+        const ref = Level.createPointElement(task);
         const firstFreeIndex = this.points.findIndex(v => v.state === "unfilled");
         if (firstFreeIndex === -1) {
             this.level += 1;
@@ -140,7 +140,7 @@ class LevelRenderer {
     }
 
     public feed(task: TaskType) {
-        const points = new Array(LevelRenderer.pointForTask(task)).fill(task);
+        const points = new Array(Level.pointForTask(task)).fill(task);
         this.pointQueue.push(...points);
         this.emptyFeedingQueue();
     }
@@ -163,7 +163,7 @@ class LevelRenderer {
     }
 
     constructor(levelElement: HTMLDivElement, initialCompletedTasks: TaskType[]) {
-        const { level, points } = LevelRenderer.calculateInitialState(initialCompletedTasks);
+        const { level, points } = Level.calculateInitialState(initialCompletedTasks);
         this.level = level;
         this.levelCounterElement = levelElement.querySelector("#level-counter")!;
         this.pointListElement = levelElement.querySelector("#points")!;
@@ -183,7 +183,7 @@ class LevelRenderer {
 function main() {
     const content = document.querySelector("#content")!;
     const level = content.querySelector<HTMLDivElement>("#level")!;
-    const levelCalculator = new LevelRenderer(level, ["easy", "medium", "hard", "impossible"]);
+    const levelCalculator = new Level(level, ["easy", "medium", "hard", "impossible"]);
     const quests: Quest[] = [
         {
             title: "slay a dragon",
