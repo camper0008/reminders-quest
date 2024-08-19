@@ -137,6 +137,7 @@ class Level {
             this.emptyFeedingQueue();
         }
         this.replacePoint({ ref, state: "filled" }, firstFreeIndex);
+        new Audio("dopamine.ogg").play();
     }
 
     public feed(task: TaskType) {
