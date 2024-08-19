@@ -1,0 +1,102 @@
+:root {
+    color-scheme: light dark;
+    --animation-timer: 200ms;
+}
+
+.quest {
+    padding: 1rem;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
+.quest>h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.quest-task-list {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quest-task-item {
+    border: 1px solid;
+    border-radius: 0.5rem;
+    padding: 0.5em;
+}
+
+#level {
+    text-align: center;
+}
+
+#points {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    height: 2rem;
+    border-radius: 0.5rem;
+    border: 1px solid;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.point {
+    flex: 1;
+    border-left: 1px solid;
+    animation: linear point-in var(--animation-timer) forwards;
+}
+
+.point.old {
+    border-left: 0;
+    animation: linear point-out var(--animation-timer) forwards;
+}
+
+.point:first-child {
+    border-left: 0;
+}
+
+@keyframes point-out {
+    0% {
+        flex: 1;
+    }
+
+    50% {
+        background-color: transparent;
+    }
+
+    100% {
+        flex: 0;
+        background-color: transparent;
+    }
+}
+
+
+@keyframes point-in {
+    0% {
+        flex: 0;
+    }
+
+    100% {
+        flex: 1;
+    }
+}
+
+.point-easy {
+    background-color: #37B700;
+}
+
+.point-medium {
+    background-color: #2B86C6;
+}
+
+.point-hard {
+    background-color: #FF781E;
+}
+
+.point-impossible {
+    background-color: #D31730;
+}
