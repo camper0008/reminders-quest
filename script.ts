@@ -130,14 +130,16 @@ class Level {
         const firstFreeIndex = this.points.findIndex(v => v.state === "unfilled");
         if (firstFreeIndex === -1) {
             this.level += 1;
+            new Audio("level_up.ogg").play();
             this.levelCounterElement.innerText = this.level.toString();
             this.clear();
             this.fillEmptySpots();
             this.pointQueue.unshift(task);
             this.emptyFeedingQueue();
+            return;
         }
         this.replacePoint({ ref, state: "filled" }, firstFreeIndex);
-        new Audio("dopamine.ogg").play();
+        new Audio("slot_filled.ogg").play();
     }
 
     public feed(task: TaskType) {
